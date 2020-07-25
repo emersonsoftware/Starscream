@@ -73,8 +73,8 @@ public class FoundationHTTPServerHandler: HTTPServerHandler {
         if !CFHTTPMessageIsHeaderComplete(response) {
             return false //not enough data, wait for more
         }
-        if let method = CFHTTPMessageCopyRequestMethod(response)?.takeRetainedValue() {
-            if method != getVerb {
+        if let unretainedMethod = CFHTTPMessageCopyRequestMethod(response) {
+            if NSString(string: unretainedMethod.takeRetainedValue()) != getVerb {
                 delegate?.didReceive(event: .failure(HTTPUpgradeError.invalidData))
                 return true
             }
